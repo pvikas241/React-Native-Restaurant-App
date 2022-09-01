@@ -10,30 +10,23 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x, 14.x, 16.x]
 
     steps:
     - uses: actions/checkout@v3
-    - uses: actions/setup-node@master
-    - uses: c-hive/gha-yarn-cache@v1
-
-    - name: Install node modules
-      run: |
-        yarn install
-    - name: Cache Gradle Wrapper
-      uses: actions/cache@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
       with:
-        path: ~/.gradle/wrapper
-        key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
-
-    - name: Cache Gradle Dependencies
-      uses: actions/cache@v2
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - name: Setup Java JDK
+      uses: actions/setup-java@v3.4.1
       with:
-        path: ~/.gradle/caches
-        key: ${{ runner.os }}-gradle-caches-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
-        
-    - name: Make Gradlew Executable
-      run: cd android && chmod +x ./gradlew
-
-    - name: Build Android App Bundle
-      run: |
-        cd android && ./gradlew bundleRelease --no-daemon      
+        java-version: '11'
+        distribution: 'jdk'
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    - name: Build with Gradle
+      run: cd android && ./gradlew build    
