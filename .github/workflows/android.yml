@@ -27,7 +27,7 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
         cache: gradle
-    - run: gradle wrapper --gradle-version 2.14.1   
+    - run: cd android && gradle wrapper --gradle-version 2.14.1   
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
