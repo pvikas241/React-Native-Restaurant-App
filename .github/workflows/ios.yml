@@ -21,7 +21,7 @@ jobs:
           node-version: 12.16.1
           
       - name: Install dependencies
-        run: npm install
+        run: cd ios && npm install
         
       - name: Install pod dependencies
         run: |
